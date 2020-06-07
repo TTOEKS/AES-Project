@@ -1,5 +1,5 @@
 # AES-Project  
-This project is my graduation class work  
+This project is my graduation class work / Update 2020.06.07
 
 I want make encrypted storage that anyone who not access can't read even admin   
 And i should consider how can i save encrypted file name and send search query (EDB Keyword Search)  
@@ -26,4 +26,4 @@ Rand function: rand of openssl
 - [ ] Make client  
 - [ ] Separate modules  
 
-Update 2020.06.07
+
