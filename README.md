@@ -1,8 +1,8 @@
-# AES-Project
-This project is my graduation class work
+# AES-Project  
+This project is my graduation class work  
 
-I want make encrypted storage that anyone who not access can't read even admin 
-and I should consider how can i save encrypted file name and send search query (EDB Keyword Search)
+I want make encrypted storage that anyone who not access can't read even admin   
+and I should consider how can i save encrypted file name and send search query (EDB Keyword Search)  
 
 Way 1: 
 Save encypted file name and request encypted search query 
