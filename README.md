@@ -7,8 +7,8 @@ And i should consider how can i save encrypted file name and send search query (
 Way 1: 
 Save encypted file name and request encypted search query 
 
-Way 2:
-Mapping between encrypted file name and token. and request token query 
+Way 2:  
+After mapping between encrypted file name and token. request token query 
 
 Encrypt type: AES, CBC/CTR(if i can)  
 Network way: TCP socket  
