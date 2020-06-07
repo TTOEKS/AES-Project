@@ -10,10 +10,10 @@ Save encypted file name and request encypted search query
 Way 2:
 Mapping between encrypted file name and token. and request token query 
 
-Encrypt type: AES, CBC/CTR(if i can)
-Network way: TCP socket
-Database: Mysql 
-Rand function: rand of openssl
+Encrypt type: AES, CBC/CTR(if i can)  
+Network way: TCP socket  
+Database: Mysql   
+Rand function: rand of openssl  
 
 ### To-do List  
 
