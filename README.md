@@ -16,13 +16,14 @@ Database: Mysql
 Rand function: rand of openssl
 
 ### To-do List  
-[x]Make simple socket (test by chat)  
-[ ]Connect Database and work test  
-[ ]Make AES module  
-[ ]Make file save module  
-[ ]Make file query module  
-[ ]Make server  
-[ ]Make client  
-[ ]Separate modules  
+
+-[x]Make simple socket (test by chat)  
+-[ ]Connect Database and work test  
+-[ ]Make AES module  
+-[ ]Make file save module  
+-[ ]Make file query module  
+-[ ]Make server  
+-[ ]Make client  
+-[ ]Separate modules  
 
 Update 2020.06.07
