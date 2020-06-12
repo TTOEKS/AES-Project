@@ -20,7 +20,7 @@ int db_init()
 		printf("Mysql Initialize Success\n");
 	}
 	
-	conn = mysql_real_connect(conn, "localhost", "root", "yu16969696yu!","mysql",0,NULL,0);
+	conn = mysql_real_connect(conn, "localhost", "admin", "password","mysql",0,NULL,0);
 	if(conn){
 		printf("Mysql Connect Success\n");
 	}else{
