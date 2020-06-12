@@ -19,7 +19,7 @@ Rand function: rand of openssl
 ### To-do List  
 
 - [x] Make simple socket (test by chat)  
-- [ ] Connect Database and work test  
+- [x] Connect Database and work test  
 - [ ] Make AES module  
 - [ ] Make file save module  
 - [ ] Make file query module  
