@@ -21,11 +21,14 @@ Rand function: rand of openssl
 - [x] Make simple socket (test by chat)  
 - [x] Connect Database and work test  
 - [ ] Make Convert Character to Binary 
-- [ ] Make AES module  
+- [ ] Make AES module (Also Inverse Function)
   - [x] Make Add Round Key
   - [x] Make Sub Byte
   - [x] Make Shift Rows
   - [ ] Make Mix Columns
+  - [ ] Make Key Expansion  
+- [ ] Test AES module
+- [ ] Make CTR mode
 - [ ] Make file save module  
 - [ ] Make file query module  
 - [ ] Make server  
