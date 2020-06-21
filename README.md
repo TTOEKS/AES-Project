@@ -22,8 +22,10 @@ Rand function: rand of openssl
 - [x] Connect Database and work test  
 - [ ] Make Convert Character to Binary 
 - [ ] Make AES module  
-  - [ ] Make S-Box
-  - [ ] Make Shift Rows, Mix Columns
+  - [x] Make Add Round Key
+  - [x] Make Sub Byte
+  - [x] Make Shift Rows
+  - [ ] Make Mix Columns
 - [ ] Make file save module  
 - [ ] Make file query module  
 - [ ] Make server  
