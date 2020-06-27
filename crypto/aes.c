@@ -171,3 +171,65 @@ void inv_shift_row(uint8_t (*state)[4]){
 		}
 	}
 } // end of inv_shift_row
+
+void multi_matrix(uint8_t *a, uint8_t *b, uint8_t *res){
+
+    uint8_t temp[4] = {0}, tmp;
+	
+	// Binary Multiply by 0x01, 0x02, 0x03
+    for(int i=0; i<4; i++){
+        switch (a[i]){
+            case 0x01:
+                printf("0x01\n");
+                temp[i] = b[i];
+                break;
+            case 0x02:
+                printf("0x02\n");
+                b[i] <<= 1;
+                temp[i] = b[i] ^ 0x11b;
+                break;
+            case 0x03:
+                printf("0x03\n");
+                tmp = b[i];
+                b[i] <<= 1;
+                b[i] ^= 0x11b;
+                temp[i] = b[i] ^ tmp;
+                break;
+        }
+    }
+
+    res[0] = temp[0]^temp[1]^temp[2]^temp[3];
+
+	// Deal with carry out
+    if(res[0] > 0xff){
+        res[0] ^= 0x11b;
+    }
+
+} // end of multi_matrix
+
+void mix_columns(uint8_t (*state)[4]){
+	uint8_t threadhold[] = {
+	{0x02, 0x03, 0x01, 0x01},
+	{0x01, 0x02, 0x03, 0x01},
+	{0x01, 0x01, 0x02, 0x03},
+	{0x03, 0x01, 0x01, 0x02}
+	}; 
+	uint8_t temp[4], res[4];
+	
+	int i, j = 0;
+	for(i=0; i<4; i++){
+
+		// copy columns of state values into temp
+		for(j=0; j<4; j++){
+			temp[i] = state[j][i];		
+		}
+
+		// compute multipied by threadhold
+		multi_matrix(threadhold, temp, res);
+
+		// return columns of state
+		for(j=0; j<4; j++){
+			state[j][i] = res[j];
+		}
+	}
+} // end of mix_columns
