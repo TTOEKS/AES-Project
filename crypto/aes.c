@@ -172,9 +172,10 @@ void inv_shift_row(uint8_t (*state)[4]){
 	}
 } // end of inv_shift_row
 
-void multi_matrix(uint8_t *a, uint8_t *b, uint8_t *res){
+int multi_matrix(uint8_t *a, uint8_t *b){
 
     uint8_t temp[4] = {0}, tmp;
+	uint8_t res;
 	
 	// Binary Multiply by 0x01, 0x02, 0x03
     for(int i=0; i<4; i++){
@@ -198,17 +199,19 @@ void multi_matrix(uint8_t *a, uint8_t *b, uint8_t *res){
         }
     }
 
-    res[0] = temp[0]^temp[1]^temp[2]^temp[3];
+    res = temp[0]^temp[1]^temp[2]^temp[3];
 
 	// Deal with carry out
-    if(res[0] > 0xff){
-        res[0] ^= 0x11b;
+    if(res > 0xff){
+        res ^= 0x11b;
     }
+
+	return res;
 
 } // end of multi_matrix
 
 void mix_columns(uint8_t (*state)[4]){
-	uint8_t threadhold[] = {
+	uint8_t threadhold[4][4] = {
 	{0x02, 0x03, 0x01, 0x01},
 	{0x01, 0x02, 0x03, 0x01},
 	{0x01, 0x01, 0x02, 0x03},
@@ -225,7 +228,7 @@ void mix_columns(uint8_t (*state)[4]){
 		}
 
 		// compute multipied by threadhold
-		multi_matrix(threadhold, temp, res);
+		res[i] = multi_matrix(threadhold[i], temp);
 
 		// return columns of state
 		for(j=0; j<4; j++){
