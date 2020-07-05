@@ -93,6 +93,19 @@ static uint8_t inv_sBOX[16][16] =
 // Round Constant
 uint8_t R[] = {0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36};
 
+// Bits shift and deal with Carry
+uint8_t xtime(uint8_t a){
+	uint8_t hex = a;
+	uint8_t carry = 0x01b;
+	hex <<= 1;
+
+	if(hex > 0xff){
+		hex -= 0x100;
+		hex ^= carry;
+	}
+
+	return hex;
+}
 
 //  Add Round Key function State(=text) XOR Round key
 void add_round_key(uint8_t (*state)[4], uint8_t (*key)[4]){
@@ -172,6 +185,7 @@ void inv_shift_row(uint8_t (*state)[4]){
 	}
 } // end of inv_shift_row
 
+// Multiply Matrix function for mix columns
 int multi_matrix(uint8_t *a, uint8_t *b){
 
     uint8_t temp[4] = {0}, tmp;
@@ -181,31 +195,58 @@ int multi_matrix(uint8_t *a, uint8_t *b){
     for(int i=0; i<4; i++){
         switch (a[i]){
             case 0x01:
-                printf("0x01\n");
+                // printf("0x01\n");
                 temp[i] = b[i];
                 break;
             case 0x02:
-                printf("0x02\n");
-                b[i] <<= 1;
-                temp[i] = b[i] ^ 0x11b;
+                // printf("0x02\n");
+                temp[i] = xtime(b[i]);
                 break;
             case 0x03:
-                printf("0x03\n");
+                // printf("0x03\n");
                 tmp = b[i];
-                b[i] <<= 1;
-                b[i] ^= 0x11b;
+                b[i] = xtime(b[i]);
                 temp[i] = b[i] ^ tmp;
+                break;
+            case 0x09:
+                // printf("0x09\n");
+                tmp = b[i];
+                b[i] = xtime(b[i]);
+                b[i] = xtime(b[i]);
+                b[i] = xtime(b[i]);
+                temp[i] = b[i] ^ tmp;
+                break;
+            case 0x0b:
+                // printf("0x0b\n");
+                tmp = b[i];
+                b[i] = xtime(b[i]);
+                b[i] = xtime(b[i]);
+                b[i] ^= tmp;
+                b[i] = xtime(b[i]);
+                temp[i] = b[i] ^ tmp;
+                break;
+            case 0x0d:
+                // printf("0x0d\n");
+                tmp = b[i];
+                b[i] = xtime(b[i]);
+                b[i] ^= tmp;
+                b[i] = xtime(b[i]);
+				b[i] = xtime(b[i]);
+                temp[i] = b[i] ^ tmp;
+                break;
+            case 0x0e:
+                // printf("0x0e\n");
+                tmp = b[i];
+                b[i] = xtime(b[i]);
+                b[i] ^= tmp;
+                b[i] = xtime(b[i]);
+                b[i] ^= tmp;
+                temp[i] = xtime(b[i]);
                 break;
         }
     }
 
     res = temp[0]^temp[1]^temp[2]^temp[3];
-
-	// Deal with carry out
-    if(res > 0xff){
-        res ^= 0x11b;
-    }
-
 	return res;
 
 } // end of multi_matrix
@@ -221,7 +262,6 @@ void mix_columns(uint8_t (*state)[4]){
 	
 	int i, j = 0;
 	for(i=0; i<4; i++){
-
 		// copy columns of state values into temp
 		for(j=0; j<4; j++){
 			temp[i] = state[j][i];		
@@ -236,3 +276,27 @@ void mix_columns(uint8_t (*state)[4]){
 		}
 	}
 } // end of mix_columns
+
+void inv_mix_columns(uint8_t (*state)[4]){
+	uint8_t threadhold[4][4] = {
+	{0x0e, 0x0b, 0x0d, 0x09},
+	{0x09, 0x0e, 0x0b, 0x0d},
+	{0x0d, 0x09, 0x0e, 0x0b},
+	{0x0b, 0x0d, 0x09, 0x0e}
+	};
+
+	uint8_t temp[4], res[4];
+
+	int i, j = 0;
+	for(i=0; i<4; i++){
+		for(j=0; j<4; j++){
+			temp[i] = state[j][i];
+		}
+
+		res[i] = multi_matrix(threadhold[i], temp);
+
+		for(j=0; j<4; j++){
+			state[j][i] = res[j];
+		}
+	}
+} // end of inv_mix_columns
