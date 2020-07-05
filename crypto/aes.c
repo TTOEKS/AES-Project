@@ -1,6 +1,5 @@
 #include "aes.h"
 
-
 /*
 
 	S-BOX
