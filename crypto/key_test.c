@@ -109,7 +109,7 @@ void sub_word(int *w){
 
 */
 
-void *key_init(int key_size){
+int *key_init(int key_size){
 	key_size = 16;
 	
 	switch(key_size){
