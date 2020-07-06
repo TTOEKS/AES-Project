@@ -1,6 +1,5 @@
 #include "aes.h"
 
-
 /*
 
 	S-BOX
@@ -191,7 +190,7 @@ int multi_matrix(uint8_t *a, uint8_t *b){
     uint8_t temp[4] = {0}, tmp;
 	uint8_t res;
 	
-	// Binary Multiply by 0x01, 0x02, 0x03
+    // Binary Multiply by 0x01, 0x02, 0x03, 0x09, 0x0e, 0x0b, 0x0d
     for(int i=0; i<4; i++){
         switch (a[i]){
             case 0x01:
