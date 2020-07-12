@@ -381,7 +381,7 @@ void Key_expansion(int *key){
         i++;
     }
 
-    printf("Success Key Expansion...\n");
+    // printf("Success Key Expansion...\n");
 } // END of Key_expansion
 
 
