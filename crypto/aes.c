@@ -1,5 +1,6 @@
 #include "aes.h"
 
+
 /*
 
 	S-BOX
@@ -88,6 +89,11 @@ static uint8_t inv_sBOX[16][16] =
 	{0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d}
 }; // end of inverse S-BOX
 
+// Set values
+uint8_t key[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b,     0x0c, 0x0d, 0x0e, 0x0f};
+int Nk, Nr, key_size = 0;
+int Nb = 4;
+uint8_t Round_key[176] = {0, };
 
 // Round Constant
 uint8_t R[] = {0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36};
@@ -190,7 +196,7 @@ int multi_matrix(uint8_t *a, uint8_t *b){
     uint8_t temp[4] = {0}, tmp;
 	uint8_t res;
 	
-    // Binary Multiply by 0x01, 0x02, 0x03, 0x09, 0x0e, 0x0b, 0x0d
+	// Binary Multiply by 0x01, 0x02, 0x03
     for(int i=0; i<4; i++){
         switch (a[i]){
             case 0x01:
@@ -299,3 +305,83 @@ void inv_mix_columns(uint8_t (*state)[4]){
 		}
 	}
 } // end of inv_mix_columns
+
+
+/* Key Scheduler Functions */
+void rot_word(int *w){
+    int tmp, i;
+
+    tmp = w[0];
+
+    for(i=0; i<3; i++){
+        w[i] = w[i+1];
+    }
+
+    w[3] = tmp;
+}
+
+void sub_word(int *w){
+    int i;
+    for(i=0; i<4; i++){
+        w[i] = sBOX[w[i]/16][w[i]%16];
+    }
+}
+
+void key_init(int keysize){
+    key_size = keysize;
+
+    switch(key_size){
+        case 16:
+            Nk = 4; Nr = 10;
+            break;
+        case 24:
+            Nk = 6; Nr = 12;
+            break;
+        case 32:
+            Nk = 8; Nr = 14;
+            break;
+        default:
+            Nk = 4; Nr = 10;
+            break;
+    }
+
+
+}
+
+// Key Expansion
+void Key_expansion(int *key){
+    int i, j, count = 0;
+    int temp[4], k;
+	
+	// Initialize: Round_key[0]
+    for(i=0; i<4; i++){
+        Round_key[i * 4] = key[i * 4];
+        Round_key[i * 4 + 1] = key[i * 4 + 1];
+        Round_key[i * 4 + 2] = key[i * 4 + 2];
+        Round_key[i * 4 + 3] = key[i * 4 + 3];
+    }
+
+	// Expand key by used before key.
+    while (i < (Nb * (Nr + 1))){
+        for(j=0; j<4; j++){
+            temp[j] = Round_key[(i-1) * 4 + j];
+        }
+        if(i%Nk == 0){
+            rot_word(temp);
+            sub_word(temp);
+            temp[0] ^= R[count++];
+        }
+        else if(Nk > 6 && i%Nk == 4){
+            sub_word(temp);
+        }
+
+        for(j=0; j<4; j++){
+            Round_key[i*4 + j] = Round_key[(i-Nk) * 4 + j] ^ temp[j];
+        }
+        i++;
+    }
+
+    printf("Success Key Expansion...\n");
+} // END of Key_expansion
+
+
