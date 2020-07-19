@@ -437,9 +437,14 @@ void key_expansion(uint8_t *key, uint8_t *Round_key){
         }
         i++;
     }
+<<<<<<< HEAD
 	
     printf("Success Key Expansion...\n");
 	display_matrix(Round_key, 16, Nb*(Nr+1)*4);
+=======
+
+    // printf("Success Key Expansion...\n");
+>>>>>>> daff19bc77809adba48895ad4454d3a46ded5245
 } // END of Key_expansion
 
 /*
