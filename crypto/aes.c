@@ -93,10 +93,32 @@ static uint8_t inv_sBOX[16][16] =
 uint8_t key[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b,     0x0c, 0x0d, 0x0e, 0x0f};
 int Nk, Nr, key_size = 0;
 int Nb = 4;
-uint8_t Round_key[176] = {0, };
+// uint8_t round_key[176] = {0};
 
 // Round Constant
 uint8_t R[] = {0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36};
+
+// Display Array
+void display_matrix(uint8_t *a, int columns_size, int size){
+
+    int index = 0;
+
+
+    printf("   ");
+    for(int i=0; i<columns_size; i++){
+        printf("%2d ", i);
+    }
+
+    printf("\n%2d ", index++);
+    for(int i=0; i<size; i++){
+        if(i%columns_size == 0 && i != 0){
+            printf("\n%2d ", index++);
+        }
+        printf("%02x ", a[i]);
+
+    }
+    printf("\n ------------------end\n\n");
+} // ENd of display_Matrix
 
 // Bits shift and deal with Carry
 uint8_t xtime(uint8_t a){
@@ -113,39 +135,70 @@ uint8_t xtime(uint8_t a){
 }
 
 //  Add Round Key function State(=text) XOR Round key
-void add_round_key(uint8_t (*state)[4], uint8_t (*key)[4]){
-
+void add_round_key(uint8_t (*state)[4], uint8_t *key, int r){
+	
 	for(int i=0; i<4; i++){
-		for(int j=0; j<4;j++){
-			// State XOR Key
-			state[i][j]	 = state[i][j]^key[i][j];		
-		}
+		// State XOR Key
+		state[i][0] = state[i][0]^key[16*r + 4*i+0];
+		state[i][1] = state[i][1]^key[16*r + 4*i+1];
+		state[i][2] = state[i][2]^key[16*r + 4*i+2];
+		state[i][3] = state[i][3]^key[16*r + 4*i+3];
 	}
 } // end of add_round_key
 
 // Sub byte function that conduct substitute using S-BOX 
 void sub_byte(uint8_t (*state)[4]){
-	int i, j, hex = 0;
+	int i, j = 0;
+	uint8_t hex = 0;
 	
+	for(int i=0; i<4; i++){
+		for(int j=0; j<4; j++){
+			printf("%02x ",state[i][j]);
+		}
+		printf("\n");
+	}
+	printf("---------------------------------End\n");
 	for(i; i<4; i++){
 		for(j; j<4; j++){
 			hex = state[i][j];
 			state[i][j] = sBOX[hex/16][hex%16];
 		}
 	}
+	for(int i=0; i<4; i++){
+		for(int j=0; j<4; j++){
+			printf("%02x ",state[i][j]);
+		}
+		printf("\n");
+	}
+	printf("--------End of Sub Byte\n\n");
 } // end of sub_byte
 
 
 // Inverse Sub Byte function that conduct inverse substitute using inversed S-BOX
 void inv_sub_byte(uint8_t (*state)[4]){
-	int i, j, hex = 0;
+	int i, j = 0;
+	uint8_t hex = 0;
 
+	for(int i=0; i<4; i++){
+		for(int j=0; j<4; j++){
+			printf("%02x ",state[i][j]);
+		}
+		printf("\n");
+	}
+	printf("-------------------------------------End\n");
 	for(i; i<4; i++){
 		for(j; j<4; j++){
 			hex = state[i][j];
 			state[i][j] = inv_sBOX[hex/16][hex%16];
 		}
 	}
+	for(int i=0; i<4; i++){
+		for(int j=0; j<4; j++){
+			printf("%02x ",state[i][j]);
+		}
+		printf("\n");
+	}
+	printf("------End of inv Sub Byte\n\n");
 } // end of inv_sub_byte
 
 // Shift Row function 
@@ -308,8 +361,8 @@ void inv_mix_columns(uint8_t (*state)[4]){
 
 
 /* Key Scheduler Functions */
-void rot_word(int *w){
-    int tmp, i;
+void rot_word(uint8_t *w){
+    uint8_t tmp, i;
 
     tmp = w[0];
 
@@ -320,7 +373,7 @@ void rot_word(int *w){
     w[3] = tmp;
 }
 
-void sub_word(int *w){
+void sub_word(uint8_t *w){
     int i;
     for(i=0; i<4; i++){
         w[i] = sBOX[w[i]/16][w[i]%16];
@@ -349,10 +402,14 @@ void key_init(int keysize){
 }
 
 // Key Expansion
-void Key_expansion(int *key){
+void key_expansion(uint8_t *key, uint8_t *Round_key){
     int i, j, count = 0;
-    int temp[4], k;
+    uint8_t temp[4], k;
 	
+	display_matrix(Round_key, 16, Nb*(Nr+1)*4);
+	printf("### Start Key Expansion function\n");
+	printf("Values INFO\n");
+	printf("Nr = %d, Nb = %d, Nk = %d\n",Nr, Nb, Nk);
 	// Initialize: Round_key[0]
     for(i=0; i<4; i++){
         Round_key[i * 4] = key[i * 4];
@@ -360,12 +417,12 @@ void Key_expansion(int *key){
         Round_key[i * 4 + 2] = key[i * 4 + 2];
         Round_key[i * 4 + 3] = key[i * 4 + 3];
     }
-
+	
 	// Expand key by used before key.
     while (i < (Nb * (Nr + 1))){
         for(j=0; j<4; j++){
             temp[j] = Round_key[(i-1) * 4 + j];
-        }
+		}
         if(i%Nk == 0){
             rot_word(temp);
             sub_word(temp);
@@ -380,8 +437,96 @@ void Key_expansion(int *key){
         }
         i++;
     }
-
+	
     printf("Success Key Expansion...\n");
+	display_matrix(Round_key, 16, Nb*(Nr+1)*4);
 } // END of Key_expansion
+
+/*
+	AES functions
+	void add_round_key(uint8_t (*state)[4], uint8_t (*key)[4])
+	void sub_byte(uint8_t (*state)[4])
+	void shift_row(uint8_t (*state)[4])
+	void mix_columns(uint8_t (*state)[4])
+*/
+void aes_enc(uint8_t (*plain)[4], uint8_t (*cipher)[4], uint8_t *key){
+	uint8_t state[4][4];
+	uint8_t r, i, j;
+
+	printf("### Start AES Ecnrypt function  \n");
+
+
+	// Cppy plain text into state array
+	for(i=0; i<4; i++){
+		for(j=0; j<4; j++){
+			state[i][j] = plain[i][j];
+		}
+	}
+
+	// Operate AES Encrypt
+	add_round_key(state, key, 0);
+	
+	printf("Compute Encrypt...\n");
+	for(r=1; r<10; r++){
+		sub_byte(state);
+		shift_row(state);
+		mix_columns(state);
+		add_round_key(state, key, r);
+	}
+
+	sub_byte(state);
+	shift_row(state);
+	add_round_key(state, key, 10);
+	
+	// set Cipher text
+	for(i=0; i<4; i++){
+		for(j=0; j<4; j++){
+			cipher[i][j] = state[i][j];
+		}
+	}
+
+	printf("Success AES Encrypt!\n");
+
+} // End of aes_encrypt
+
+void aes_dec(uint8_t (*cipher)[4], uint8_t (*plain)[4], uint8_t *key){
+	uint8_t state[4][4];
+	uint8_t r, i, j;
+	
+	printf("### Start AES Decrypt function\n");
+	
+	// Copy cipher text into state array
+	for(i=0; i<4; i++){
+		for(j=0; j<4; j++){
+			state[4][4] = cipher[4][4];
+		}
+	}
+	
+	// Operate AES Decrypt
+	add_round_key(state, key, 10);
+
+	printf("Compute Decrypt...\n");
+	for(r=9; r>=1; r--){
+		inv_shift_row(state);
+		inv_sub_byte(state);
+		add_round_key(state, key, r);
+		inv_mix_columns(state);
+	}
+	
+	inv_shift_row(state);
+	inv_sub_byte(state);
+	add_round_key(state, key, 0);
+
+	// set Plain text
+	for(i=0; i<4; i++){
+		for(j=0; j<4; j++){
+			plain[i][j] = state[i][j];
+		}
+	}
+	
+	printf("Success AES Decrypt!\n");
+	
+	
+} // End of aes_decrypt
 
 
