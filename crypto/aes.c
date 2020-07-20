@@ -120,6 +120,16 @@ void display_matrix(uint8_t *a, int columns_size, int size){
     printf("\n ------------------end\n\n");
 } // ENd of display_Matrix
 
+void display_2(uint8_t (*a)[4]){
+	for(int i=0; i<4; i++){
+		for(int j=0; j<4; j++){
+			printf("%02x ", a[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+
 // Bits shift and deal with Carry
 uint8_t xtime(uint8_t a){
 	uint8_t hex = a;
@@ -136,7 +146,7 @@ uint8_t xtime(uint8_t a){
 
 //  Add Round Key function State(=text) XOR Round key
 void add_round_key(uint8_t (*state)[4], uint8_t *key, int r){
-	
+
 	for(int i=0; i<4; i++){
 		// State XOR Key
 		state[i][0] = state[i][0]^key[16*r + 4*i+0];
@@ -144,6 +154,7 @@ void add_round_key(uint8_t (*state)[4], uint8_t *key, int r){
 		state[i][2] = state[i][2]^key[16*r + 4*i+2];
 		state[i][3] = state[i][3]^key[16*r + 4*i+3];
 	}
+
 } // end of add_round_key
 
 // Sub byte function that conduct substitute using S-BOX 
@@ -151,26 +162,13 @@ void sub_byte(uint8_t (*state)[4]){
 	int i, j = 0;
 	uint8_t hex = 0;
 	
-	for(int i=0; i<4; i++){
-		for(int j=0; j<4; j++){
-			printf("%02x ",state[i][j]);
-		}
-		printf("\n");
-	}
-	printf("---------------------------------End\n");
-	for(i; i<4; i++){
-		for(j; j<4; j++){
+	for(i=0; i<4; i++){
+		for(j=0; j<4; j++){
 			hex = state[i][j];
 			state[i][j] = sBOX[hex/16][hex%16];
 		}
 	}
-	for(int i=0; i<4; i++){
-		for(int j=0; j<4; j++){
-			printf("%02x ",state[i][j]);
-		}
-		printf("\n");
-	}
-	printf("--------End of Sub Byte\n\n");
+	
 } // end of sub_byte
 
 
@@ -179,26 +177,13 @@ void inv_sub_byte(uint8_t (*state)[4]){
 	int i, j = 0;
 	uint8_t hex = 0;
 
-	for(int i=0; i<4; i++){
-		for(int j=0; j<4; j++){
-			printf("%02x ",state[i][j]);
-		}
-		printf("\n");
-	}
-	printf("-------------------------------------End\n");
-	for(i; i<4; i++){
-		for(j; j<4; j++){
+	for(i=0; i<4; i++){
+		for(j=0; j<4; j++){
 			hex = state[i][j];
 			state[i][j] = inv_sBOX[hex/16][hex%16];
 		}
-	}
-	for(int i=0; i<4; i++){
-		for(int j=0; j<4; j++){
-			printf("%02x ",state[i][j]);
-		}
-		printf("\n");
-	}
-	printf("------End of inv Sub Byte\n\n");
+	}	
+
 } // end of inv_sub_byte
 
 // Shift Row function 
@@ -241,6 +226,7 @@ void inv_shift_row(uint8_t (*state)[4]){
 			state[i][j] = temp[i][j];
 		}
 	}
+
 } // end of inv_shift_row
 
 // Multiply Matrix function for mix columns
@@ -316,9 +302,12 @@ void mix_columns(uint8_t (*state)[4]){
 	{0x01, 0x01, 0x02, 0x03},
 	{0x03, 0x01, 0x01, 0x02}
 	}; 
-	uint8_t temp[4], res[4];
-	
+	uint8_t temp[4], res[4];	
 	int i, j = 0;
+
+	printf("Original state\n");
+	display_2(state);
+
 	for(i=0; i<4; i++){
 		// copy columns of state values into temp
 		for(j=0; j<4; j++){
@@ -333,6 +322,9 @@ void mix_columns(uint8_t (*state)[4]){
 			state[j][i] = res[j];
 		}
 	}
+
+	printf("After Mix_columns\n");
+	display_2(state);
 } // end of mix_columns
 
 void inv_mix_columns(uint8_t (*state)[4]){
@@ -342,7 +334,6 @@ void inv_mix_columns(uint8_t (*state)[4]){
 	{0x0d, 0x09, 0x0e, 0x0b},
 	{0x0b, 0x0d, 0x09, 0x0e}
 	};
-
 	uint8_t temp[4], res[4];
 
 	int i, j = 0;
@@ -437,14 +428,9 @@ void key_expansion(uint8_t *key, uint8_t *Round_key){
         }
         i++;
     }
-<<<<<<< HEAD
 	
     printf("Success Key Expansion...\n");
 	display_matrix(Round_key, 16, Nb*(Nr+1)*4);
-=======
-
-    // printf("Success Key Expansion...\n");
->>>>>>> daff19bc77809adba48895ad4454d3a46ded5245
 } // END of Key_expansion
 
 /*
@@ -474,9 +460,20 @@ void aes_enc(uint8_t (*plain)[4], uint8_t (*cipher)[4], uint8_t *key){
 	printf("Compute Encrypt...\n");
 	for(r=1; r<10; r++){
 		sub_byte(state);
+//		display_2(state);
+//		printf("-- end of sub_byte\n\n");
+
 		shift_row(state);
+//		display_2(state);
+//		printf("-- end of shift_row\n\n");
+
 		mix_columns(state);
+//		display_2(state);
+//		printf("-- end of mix_columns\n\n");
+		
 		add_round_key(state, key, r);
+//		display_2(state);
+//		printf("-- end of add_round_key\n\n");
 	}
 
 	sub_byte(state);
@@ -503,8 +500,9 @@ void aes_dec(uint8_t (*cipher)[4], uint8_t (*plain)[4], uint8_t *key){
 	// Copy cipher text into state array
 	for(i=0; i<4; i++){
 		for(j=0; j<4; j++){
-			state[4][4] = cipher[4][4];
+			state[i][j] = cipher[i][j];
 		}
+		printf("\n");
 	}
 	
 	// Operate AES Decrypt
@@ -515,6 +513,7 @@ void aes_dec(uint8_t (*cipher)[4], uint8_t (*plain)[4], uint8_t *key){
 		inv_shift_row(state);
 		inv_sub_byte(state);
 		add_round_key(state, key, r);
+
 		inv_mix_columns(state);
 	}
 	
