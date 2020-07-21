@@ -27,11 +27,11 @@ Rand function: rand of openssl
   - [x] Make Shift Rows
   - [x] Make Mix Columns
   - [x] Make Key Expansion  
-- [ ] Test AES module
+- [] Test AES module
   - [x] Key Expansion
   - [x] Sub Byte
   - [x] Shift Rows
-  - [ ] Mix Columns         <-  I find bug at this function
+  - [x] Mix Columns         ~~find bug at this function~~
 - [ ] Make CTR mode
 - [ ] Make file save module  
 - [ ] Make file query module  
