@@ -27,7 +27,7 @@ Rand function: rand of openssl
   - [x] Make Shift Rows
   - [x] Make Mix Columns
   - [x] Make Key Expansion  
-- [] Test AES module
+- [x] Test AES module
   - [x] Key Expansion
   - [x] Sub Byte
   - [x] Shift Rows
