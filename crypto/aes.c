@@ -90,19 +90,17 @@ static uint8_t inv_sBOX[16][16] =
 }; // end of inverse S-BOX
 
 // Set values
-uint8_t key[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b,     0x0c, 0x0d, 0x0e, 0x0f};
 int Nk, Nr, key_size = 0;
 int Nb = 4;
-// uint8_t round_key[176] = {0};
 
 // Round Constant
 uint8_t R[] = {0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36};
+
 
 // Display Array
 void display_matrix(uint8_t *a, int columns_size, int size){
 
     int index = 0;
-
 
     printf("   ");
     for(int i=0; i<columns_size; i++){
@@ -230,68 +228,65 @@ void inv_shift_row(uint8_t (*state)[4]){
 } // end of inv_shift_row
 
 // Multiply Matrix function for mix columns
-int multi_matrix(uint8_t *a, uint8_t *b){
+uint8_t multi_matrix(uint8_t *a, uint8_t *b){
 
-    uint8_t temp[4] = {0}, tmp;
-	uint8_t res;
-	
-	// Binary Multiply by 0x01, 0x02, 0x03
+	uint8_t temp[4], b_temp[4] = {0};
+    int res, tmp;
+
+	for(int i =0; i<4; i++){
+		b_temp[i] = b[i];
+	}
+
+    // Binary Multiply by 0x01, 0x02, 0x03
     for(int i=0; i<4; i++){
         switch (a[i]){
             case 0x01:
-                // printf("0x01\n");
-                temp[i] = b[i];
+                temp[i] = b_temp[i];
                 break;
             case 0x02:
-                // printf("0x02\n");
-                temp[i] = xtime(b[i]);
+                temp[i] = xtime(b_temp[i]);
                 break;
             case 0x03:
-                // printf("0x03\n");
-                tmp = b[i];
-                b[i] = xtime(b[i]);
-                temp[i] = b[i] ^ tmp;
+               	tmp = b_temp[i];
+                b_temp[i] = xtime(b_temp[i]);
+                temp[i] = b_temp[i] ^ tmp;
                 break;
             case 0x09:
-                // printf("0x09\n");
-                tmp = b[i];
-                b[i] = xtime(b[i]);
-                b[i] = xtime(b[i]);
-                b[i] = xtime(b[i]);
-                temp[i] = b[i] ^ tmp;
+                tmp = b_temp[i];
+                b_temp[i] = xtime(b_temp[i]);
+                b_temp[i] = xtime(b_temp[i]);
+                b_temp[i] = xtime(b_temp[i]);
+                temp[i] = b_temp[i] ^ tmp;
                 break;
             case 0x0b:
-                // printf("0x0b\n");
-                tmp = b[i];
-                b[i] = xtime(b[i]);
-                b[i] = xtime(b[i]);
-                b[i] ^= tmp;
-                b[i] = xtime(b[i]);
-                temp[i] = b[i] ^ tmp;
+                tmp = b_temp[i];
+                b_temp[i] = xtime(b_temp[i]);
+                b_temp[i] = xtime(b_temp[i]);
+                b_temp[i] ^= tmp;
+                b_temp[i] = xtime(b_temp[i]);
+                temp[i] = b_temp[i] ^ tmp;
                 break;
             case 0x0d:
-                // printf("0x0d\n");
-                tmp = b[i];
-                b[i] = xtime(b[i]);
-                b[i] ^= tmp;
-                b[i] = xtime(b[i]);
-				b[i] = xtime(b[i]);
-                temp[i] = b[i] ^ tmp;
+                tmp = b_temp[i];
+                b_temp[i] = xtime(b_temp[i]);
+				b_temp[i] ^= tmp;
+                b_temp[i] = xtime(b_temp[i]);
+                b_temp[i] = xtime(b_temp[i]);
+                temp[i] = b_temp[i] ^ tmp;
                 break;
             case 0x0e:
-                // printf("0x0e\n");
-                tmp = b[i];
-                b[i] = xtime(b[i]);
-                b[i] ^= tmp;
-                b[i] = xtime(b[i]);
-                b[i] ^= tmp;
-                temp[i] = xtime(b[i]);
+                tmp = b_temp[i];
+                b_temp[i] = xtime(b_temp[i]);
+                b_temp[i] ^= tmp;
+                b_temp[i] = xtime(b_temp[i]);
+                b_temp[i] ^= tmp;
+                temp[i] = xtime(b_temp[i]);
                 break;
         }
     }
 
     res = temp[0]^temp[1]^temp[2]^temp[3];
-	return res;
+    return res;
 
 } // end of multi_matrix
 
@@ -305,26 +300,14 @@ void mix_columns(uint8_t (*state)[4]){
 	uint8_t temp[4], res[4];	
 	int i, j = 0;
 
-	printf("Original state\n");
-	display_2(state);
-
 	for(i=0; i<4; i++){
-		// copy columns of state values into temp
 		for(j=0; j<4; j++){
-			temp[i] = state[j][i];		
+			temp[j] = state[j][i];
 		}
-
-		// compute multipied by threadhold
-		res[i] = multi_matrix(threadhold[i], temp);
-
-		// return columns of state
-		for(j=0; j<4; j++){
-			state[j][i] = res[j];
+		for(j=0; j<4; j++){	
+			state[j][i] = multi_matrix(threadhold[j], temp);
 		}
 	}
-
-	printf("After Mix_columns\n");
-	display_2(state);
 } // end of mix_columns
 
 void inv_mix_columns(uint8_t (*state)[4]){
@@ -335,17 +318,15 @@ void inv_mix_columns(uint8_t (*state)[4]){
 	{0x0b, 0x0d, 0x09, 0x0e}
 	};
 	uint8_t temp[4], res[4];
-
 	int i, j = 0;
+
 	for(i=0; i<4; i++){
 		for(j=0; j<4; j++){
-			temp[i] = state[j][i];
+			temp[j] = state[j][i];
 		}
 
-		res[i] = multi_matrix(threadhold[i], temp);
-
 		for(j=0; j<4; j++){
-			state[j][i] = res[j];
+			state[j][i] = multi_matrix(threadhold[j], temp);
 		}
 	}
 } // end of inv_mix_columns
@@ -460,20 +441,9 @@ void aes_enc(uint8_t (*plain)[4], uint8_t (*cipher)[4], uint8_t *key){
 	printf("Compute Encrypt...\n");
 	for(r=1; r<10; r++){
 		sub_byte(state);
-//		display_2(state);
-//		printf("-- end of sub_byte\n\n");
-
 		shift_row(state);
-//		display_2(state);
-//		printf("-- end of shift_row\n\n");
-
 		mix_columns(state);
-//		display_2(state);
-//		printf("-- end of mix_columns\n\n");
-		
 		add_round_key(state, key, r);
-//		display_2(state);
-//		printf("-- end of add_round_key\n\n");
 	}
 
 	sub_byte(state);
@@ -502,7 +472,6 @@ void aes_dec(uint8_t (*cipher)[4], uint8_t (*plain)[4], uint8_t *key){
 		for(j=0; j<4; j++){
 			state[i][j] = cipher[i][j];
 		}
-		printf("\n");
 	}
 	
 	// Operate AES Decrypt
@@ -513,7 +482,6 @@ void aes_dec(uint8_t (*cipher)[4], uint8_t (*plain)[4], uint8_t *key){
 		inv_shift_row(state);
 		inv_sub_byte(state);
 		add_round_key(state, key, r);
-
 		inv_mix_columns(state);
 	}
 	

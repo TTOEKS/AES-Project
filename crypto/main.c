@@ -31,10 +31,7 @@ int main(){
 		printf("\n");
 	}
 
-	printf("\n-----------------------\n  Functions Test\n-----------------------\n\n");
 	key_expansion(key, Round_key);
-	printf("### Key Expansion TEST\n");
-
 
 	printf("----------------------------------\n  PlainText Message:\n");
 	for(i=0; i<4; i++){
@@ -59,25 +56,3 @@ int main(){
 	free(Round_key);
 	return 0;
 }
-/*
-void display_matrix(int *a, int columns_size, int size){
-
-    int index = 0;
-
-
-    printf("   ");
-    for(int i=0; i<columns_size; i++){
-        printf("%2d ", i);
-    }
-
-    printf("\n%2d ", index++);
-    for(int i=0; i<size; i++){
-        if(i%columns_size == 0 && i != 0){
-            printf("\n%2d ", index++);
-        }
-        printf("%2x ", a[i]);
-
-    }
-    printf("\n ------------------end\n\n");
-}
-*/
