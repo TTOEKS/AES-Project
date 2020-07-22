@@ -1,5 +1,5 @@
 # AES-Project  
-Last update 2020.07.21   
+Last update 2020.07.22   
 This project is my graduation class work 
 
 I want make encrypted storage that anyone who not access can't read even admin   
@@ -20,7 +20,7 @@ Rand function: rand of openssl
 
 - [x] Make simple socket (test by chat)  
 - [x] Connect Database and work test  
-- [ ] Make Convert Character to Binary 
+- [] Make Convert Character to Binary 
 - [x] Make AES module (Also Inverse Function)
   - [x] Make Add Round Key
   - [x] Make Sub Byte
