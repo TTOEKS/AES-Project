@@ -20,7 +20,7 @@ Rand function: rand of openssl
 
 - [x] Make simple socket (test by chat)  
 - [x] Connect Database and work test  
-- [] Make Convert Character to Binary 
+- [x] Make Convert Character to Hex 
 - [x] Make AES module (Also Inverse Function)
   - [x] Make Add Round Key
   - [x] Make Sub Byte
