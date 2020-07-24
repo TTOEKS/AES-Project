@@ -4,8 +4,8 @@
 #include<stdint.h>
 #include<stdlib.h>
 
-void convertor(char *string, uint8_t *out);
+void convertor(char *string, uint8_t (*out)[4]);
 
 void padding(char *string, int size);
 
-void inv_convertor(uint8_t *in, char *string);
+void inv_convertor(uint8_t (*in)[4], char *string);

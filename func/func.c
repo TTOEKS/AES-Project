@@ -9,28 +9,32 @@ void padding(char *string, int size){
 }
 
 // Convert string to number
-void convertor(char *string, uint8_t *out){
-	for(int i=0; i<16; i++){
-		out[i] = string[i] - 48;
+void convertor(char *string, uint8_t (*out)[4]){
+	for(int i=0; i<4; i++){
+		for(int j=0; j<4; j++){
+			out[i][j] = string[4 * i + j] - 48;
+		}
 	}
 }
 
 // Convert number to string
-void inv_convertor(uint8_t *in, char *string){
-	for(int i=0; i<16; i++){
-		string[i] = in[i] + 48;
+void inv_convertor(uint8_t (*in)[4], char *string){
+	for(int i=0; i<4; i++){
+		for(int j=0; j<4; j++){
+			string[4 * i + j] = in[i][j] + 48;
+		}		
 	}
 	
 	// End of String
 	string[16] = '\0';
 	
 }
-
 /*
+
 int main()
 {
 	char title[64];
-	uint8_t out[64];
+	uint8_t out[4][4];
 	char inv_title[64];
 	int title_len;
 
@@ -49,8 +53,10 @@ int main()
 		convertor(title, out);
 	}
 
-	for(int i=0; i<16; i++){
-		printf("%02x ", out[i]);
+	for(int i=0; i<4; i++){
+		for(int j=0; j<4; j++){
+			printf("%02x ", out[i][j]);
+		}
 	}
 	printf("\n");
 	

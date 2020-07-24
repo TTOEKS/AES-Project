@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include"aes.h"
-
+#include"../func/func.h"
 
 // void display_matrix(int *a, int columns_size, int size);
 
@@ -19,10 +19,32 @@ int main(){
 	uint8_t cipher[4][4];
 	uint8_t dec_test[4][4];
 	uint8_t *Round_key;
+	char title[64], inv_title[64];
+	int title_len;
+
+	
+	// Start Main Code
+	printf("파일명을 16자리 이하로 입력해주세요:");
+	scanf("%s", title);
+	title_len = strlen(title);
+
+	if(title_len > 16){
+		printf("파일명을 16자리 이하로 입력해주세요!!\n");
+		exit(1);
+	} else{
+		padding(title, title_len);
+		printf("%s, %d\n", title, title_len);
+		printf("### Start Convertor\n");
+		convertor(title, plain);
+	}
+
+	printf("Your title: %s\n", title);
+	printf("\n");
 
 	Round_key = malloc(192);
-
 	key_init(16);
+	
+/*
 	printf("Original Message: \n");
 	for(i=0; i<4; i++){
 		for(j=0; j<4; j++){
@@ -30,29 +52,33 @@ int main(){
 		}
 		printf("\n");
 	}
-
+*/
+	printf("Key INFO:\n");
 	key_expansion(key, Round_key);
 
-	printf("----------------------------------\n  PlainText Message:\n");
+	printf("----------------------------------\n  Converted Message(Convert Message):\n");
 	for(i=0; i<4; i++){
 		printf("%02x %02x %02x %02x ", plain[i][0], plain[i][1], plain[i][2], plain[i][3]);
 	}
-	printf("\n");
+	printf("\n\n");
 
 	aes_enc(plain, cipher, Round_key);	
 	printf("----------------------------------\n  CipherText Message:\n");
 	for(i=0; i<4; i++){
 		printf("%02x %02x %02x %02x ", cipher[i][0], cipher[i][1], cipher[i][2], cipher[i][3]);
 	}
-	printf("\n");
+	printf("\n\n");
 
 	aes_dec(cipher, dec_test, Round_key);
 	printf("----------------------------------\n  Original Message(After decrypt):\n");
 	for(i=0; i<4; i++){
 		printf("%02x %02x %02x %02x ", dec_test[i][0], dec_test[i][1], dec_test[i][2], dec_test[i][3]);
 	}
-	printf("\n");
+	printf("\n\n");
 
+	inv_convertor(dec_test, inv_title);
+	printf("----------------------------------\n  Recover title(After inv_convert):\n%s\n", inv_title);
+	printf("\n\n### End of test coden\n");
 	free(Round_key);
 	return 0;
 }
