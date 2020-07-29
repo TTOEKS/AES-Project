@@ -1,5 +1,5 @@
 # AES-Project  
-Last update 2020.07.22   
+Last update 2020.07.29   
 This project is my graduation class work 
 
 I want make encrypted storage that anyone who not access can't read even admin   
@@ -35,8 +35,8 @@ Rand function: rand of openssl
   - [x] Mix Columns            <-  ~~find bug at this function~~  
   
 - [ ] Make CTR mode
-  -[ ] Encrypt function
-  -[ ] Decrypt function  
+  - [ ] Encrypt function
+  - [ ] Decrypt function  
   
 - [ ] Make file save module  
 - [ ] Make file query module  
