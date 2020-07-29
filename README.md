@@ -18,30 +18,30 @@ Rand function: rand of openssl
 
 ### To-do List  
 
-- [x] Make simple socket (test by chat)  
-- [x] Connect Database and work test  
-- [x] Make Convert Character to Hex 
-- [x] Make AES module (Also Inverse Function)
+- [x] Make simple socket (test by chat)    
+- [x] Connect Database and work test    
+- [x] Make Convert Character to Hex   
+- [x] Make AES module (Also Inverse Function)    
   - [x] Make Add Round Key
   - [x] Make Sub Byte
   - [x] Make Shift Rows
   - [x] Make Mix Columns
   - [x] Make Key Expansion    
   
-- [x] Test AES module
-  - [x] Key Expansion
-  - [x] Sub Byte
-  - [x] Shift Rows
-  - [x] Mix Columns            <-  ~~find bug at this function~~  
+- [x] Test AES module  
+  - [x] Key Expansion  
+  - [x] Sub Byte  
+  - [x] Shift Rows  
+  - [x] Mix Columns              <-  ~~find bug at this function~~  
   
 - [ ] Make CTR mode
-  - [ ] Encrypt function
+  - [x] Encrypt function
   - [ ] Decrypt function  
   
-- [ ] Make file save module  
-- [ ] Make file query module  
-- [ ] Make server  
-- [ ] Make client  
-- [ ] Separate modules  
+- [ ] Make file save module    
+- [ ] Make file query module    
+- [ ] Make server    
+- [ ] Make client    
+- [ ] Separate modules    
 
 Don't confuse between int type and uint8_t type :(
