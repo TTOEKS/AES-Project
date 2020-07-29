@@ -5,8 +5,6 @@
 // void display_matrix(int *a, int columns_size, int size);
 
 int main(){
-	int i, j;
-
 	uint8_t key[16] = {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2,
 		0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c};
 
@@ -20,7 +18,9 @@ int main(){
 	uint8_t dec_test[4][4];
 	uint8_t *Round_key;
 	char title[64], inv_title[64];
-	int title_len;
+	char *padding_result;
+	int  i, j;
+	size_t title_len;
 
 	
 	// Start Main Code
@@ -32,8 +32,8 @@ int main(){
 		printf("파일명을 16자리 이하로 입력해주세요!!\n");
 		exit(1);
 	} else{
-		padding(title, title_len);
-		printf("%s, %d\n", title, title_len);
+		padding_result = padding(title);
+		printf("%s, %ld\n", title, title_len);
 		printf("### Start Convertor\n");
 		convertor(title, plain);
 	}
@@ -41,6 +41,7 @@ int main(){
 	printf("Your title: %s\n", title);
 	printf("\n");
 
+	// Memory allocate for key space
 	Round_key = malloc(192);
 	key_init(16);
 	
@@ -53,6 +54,7 @@ int main(){
 		printf("\n");
 	}
 */
+	// Key Expansion
 	printf("Key INFO:\n");
 	key_expansion(key, Round_key);
 

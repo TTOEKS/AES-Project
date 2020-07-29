@@ -460,7 +460,7 @@ void aes_enc(uint8_t (*plain)[4], uint8_t (*cipher)[4], uint8_t *key){
 	printf("Success AES Encrypt!\n");
 
 } // End of aes_encrypt
-
+	
 void aes_dec(uint8_t (*cipher)[4], uint8_t (*plain)[4], uint8_t *key){
 	uint8_t state[4][4];
 	uint8_t r, i, j;
@@ -501,4 +501,4 @@ void aes_dec(uint8_t (*cipher)[4], uint8_t (*plain)[4], uint8_t *key){
 	
 } // End of aes_decrypt
 
-
+		

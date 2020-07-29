@@ -1,11 +1,22 @@
 #include "func.h"
 
 // if string size lower than 16, it is filled 0
-void padding(char *string, int size){
-	printf("### Start padding\n");
-	for(int i=size; i<16; i++){
-		string[i] = '0';
+char *padding(char *string){
+	size_t len = strlen(string);
+	char *temp;
+
+	int padding_count = len % 16;
+	if(padding_count != 0){
+		printf("### Start padding\n");
+		temp = (char *)malloc(16 * sizeof(char));
+		strncpy(temp, string, len);
+		for(int i=len; i<16; i++){
+			temp[i] = '0';
+		}
+		temp[16] = '\0';
 	}
+	printf("%s\n", temp);
+	return temp;
 }
 
 // Convert string to number
