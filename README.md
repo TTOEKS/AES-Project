@@ -26,13 +26,18 @@ Rand function: rand of openssl
   - [x] Make Sub Byte
   - [x] Make Shift Rows
   - [x] Make Mix Columns
-  - [x] Make Key Expansion  
+  - [x] Make Key Expansion    
+  
 - [x] Test AES module
   - [x] Key Expansion
   - [x] Sub Byte
   - [x] Shift Rows
-  - [x] Mix Columns            <-  ~~find bug at this function~~
+  - [x] Mix Columns            <-  ~~find bug at this function~~  
+  
 - [ ] Make CTR mode
+  -[ ] Encrypt function
+  -[ ] Decrypt function  
+  
 - [ ] Make file save module  
 - [ ] Make file query module  
 - [ ] Make server  
