@@ -1,4 +1,5 @@
-#include "../conf.h"
+#include "conf.h"
+#include "func.h"
 
 int main()
 {
@@ -36,7 +37,7 @@ int main()
 	}
 
 	while(1){
-		printf("\nSend Message : ");
+		printf("\nSend Message (context size must under 16): ");
 		gets(buf);
 
 		if(strcmp(buf, "exit") == 0){
@@ -44,7 +45,13 @@ int main()
 			break;
 		}
 
-		send(clntSock, buf, (int)strlen(buf), 0);
+    printf("----- Send message info\n");
+    printf("### origianl binary: ");
+    display_uint8_double_array(buf, 4, 4);
+    printf("\n");
+    printf("Original data: %s\n\n", buf);
+
+		send(clntSock, buf, 16, 0);
 		printf("Message Receives ...\n");
 
 		nRecv = recv(clntSock, buf, sizeof(buf) - 1, 0);
@@ -60,8 +67,11 @@ int main()
 			break;
 		}
 
-		printf("Receive Message : %s", buf);
-
+    printf("----- Recv message info\n");
+    printf("### Origianl binary: ");
+    display_uint8_double_array(buf, 4, 4);
+    printf("\n");
+    printf("Original data: %s\n\n", buf);
 	}
 
 	close(clntSock);

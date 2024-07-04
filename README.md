@@ -1,19 +1,16 @@
 # AES-Project  
 Last update 2020.07.31   
-This project is my graduation class work 
+This project is my personal project devised by graduation class word
 
-I want make encrypted storage that anyone who not access can't read even admin   
-And i should consider how can i save encrypted file name and send search query (EDB Keyword Search)  
+Current project goal: AES encrypted communcation
 
-Way 1:   
-Save encypted file name and request encypted search query 
+originally, this project goal was make encrypted storage.
+this project was stopped so long times ago. so, change the project goal from encrypted storage to encrypted socket communcation
+I was started this project for implmented AES cryptography using C lang.
+Altough project goal changed, my goal was not changed.
 
-Way 2:  
-After mapping between encrypted file name and token. request token query 
-
-Encrypt type: AES, CBC/CTR(if i can)  
+Encrypt type: AES (CTR mode)
 Network way: TCP socket  
-Database: Mysql   
 Rand function: rand of openssl  
 
 ### To-do List  
@@ -38,10 +35,26 @@ Rand function: rand of openssl
   - [x] Encrypt function
   - [x] Decrypt function  
   
-- [ ] Make file save module    
-- [ ] Make file query module    
-- [ ] Make server    
-- [ ] Make client    
-- [ ] Separate modules    
-
 Don't confuse between int type and uint8_t type :(
+
+## Function Test
+### AES Cryptogarphy function test
+#### AES encryption/decription 
+![AES Cipher test](./rsrc/aes_cipher_test.png)
+  - Original Message: Hello World!!
+
+### AES Cryptography communication test
+#### Plain text communication
+![AES plain communcation](./rsrc/plain_socket_communication.png)
+  - Communcation flow
+    1. Client send: Hello World
+    2. Server send: Hello World too.
+  - You can see payload data
+
+#### Encyprted test communcation
+![AES cipher communcation](./rsrc/cipher_socket_communication.png)
+  - Communcation flow
+    1. Client send: Hello World
+    2. Server send: Hello World too.
+  - You can't see payload data (encrypted)
+  - but, endpoint host can see payload data

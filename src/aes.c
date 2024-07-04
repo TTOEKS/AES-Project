@@ -425,9 +425,6 @@ void aes_enc(uint8_t (*plain)[4], uint8_t (*cipher)[4], uint8_t *key){
 	uint8_t state[4][4];
 	uint8_t r, i, j;
 
-	printf("### Start AES Ecnrypt function  \n");
-
-
 	// Cppy plain text into state array
 	for(i=0; i<4; i++){
 		for(j=0; j<4; j++){
@@ -438,7 +435,7 @@ void aes_enc(uint8_t (*plain)[4], uint8_t (*cipher)[4], uint8_t *key){
 	// Operate AES Encrypt
 	add_round_key(state, key, 0);
 	
-	printf("Compute Encrypt...\n");
+	// printf("Compute Encrypt...\n");
 	for(r=1; r<10; r++){
 		sub_byte(state);
 		shift_row(state);
@@ -465,8 +462,6 @@ void aes_dec(uint8_t (*cipher)[4], uint8_t (*plain)[4], uint8_t *key){
 	uint8_t state[4][4];
 	uint8_t r, i, j;
 	
-	printf("### Start AES Decrypt function\n");
-	
 	// Copy cipher text into state array
 	for(i=0; i<4; i++){
 		for(j=0; j<4; j++){
@@ -477,7 +472,7 @@ void aes_dec(uint8_t (*cipher)[4], uint8_t (*plain)[4], uint8_t *key){
 	// Operate AES Decrypt
 	add_round_key(state, key, 10);
 
-	printf("Compute Decrypt...\n");
+	// printf("Compute Decrypt...\n");
 	for(r=9; r>=1; r--){
 		inv_shift_row(state);
 		inv_sub_byte(state);

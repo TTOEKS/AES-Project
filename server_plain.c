@@ -1,4 +1,5 @@
-#include "../conf.h"
+#include "conf.h"
+#include "func.h"
 
 int main(int argc, char **argv)
 {
@@ -9,8 +10,7 @@ int main(int argc, char **argv)
 	pid_t childpid;
 	socklen_t clilen;
 	char buf[MAX_LINE];
-	int nRcv;
-
+	int nRecv;
 
 	servSock = socket(PF_INET, SOCK_STREAM, 0);
 	if(servSock < 0){
@@ -46,21 +46,26 @@ int main(int argc, char **argv)
 	while(1){
 
 		printf("Message Receives ...\n");
-		nRcv = recv(clntSock, buf, sizeof(buf) - 1, 0);
+		nRecv = recv(clntSock, buf, sizeof(buf) - 1, 0);
 
-		if(nRcv < 0){
+		if(nRecv < 0){
 			perror("receive error");
 			exit(1);
 		}
-		buf[nRcv] = '\0';
+		buf[nRecv] = '\0';
 
 		if(strcmp(buf, "exit") == 0){
 			printf("Close client Connection..\n");
 			break;
 		}
 
-		printf("Receive Message : %s", buf);
-		printf("\nSend Message : ");
+    printf("----- Recv message info\n");
+    printf("### origianl binary: ");
+    display_uint8_double_array(buf, 4, 4);
+    printf("\n");
+    printf("orignal data: %s\n\n", buf);
+    
+		printf("\nSend Message (context size must under 16): ");
 
 		gets(buf);
 		if(strcmp(buf, "exit") == 0){
@@ -68,7 +73,13 @@ int main(int argc, char **argv)
 			break;
 		}
 
-		send(clntSock, buf, (int)strlen(buf), 0);
+    printf("----- Send message info\n");
+    printf("### Origianl binary: ");
+    display_uint8_double_array(buf, 4, 4);
+    printf("\n");
+    printf("Original data: %s\n\n", buf);
+
+		send(clntSock, buf, 16, 0);
 
 	} // end of while
 	close(clntSock);

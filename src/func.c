@@ -7,7 +7,6 @@ char *padding(char *string){
 
 	int padding_count = len % 16;
 	if(padding_count != 0){
-		printf("### Start padding\n");
 		temp = (char *)malloc(16 * sizeof(char));
 		strncpy(temp, string, len);
 		for(int i=len; i<16; i++){
@@ -15,7 +14,7 @@ char *padding(char *string){
 		}
 		temp[16] = '\0';
 	}
-	printf("%s\n", temp);
+	printf("padding result: %s\n", temp);
 	return temp;
 }
 
@@ -40,6 +39,17 @@ void inv_convertor(uint8_t (*in)[4], char *string){
 	string[16] = '\0';
 	
 }
+
+void display_uint8_double_array(uint8_t *arr, int row, int column) {
+  int i, j;
+
+  for (i=0; i<row; i++) {
+    for (j=0; j<column; j++) {
+      printf("%02x ", *arr++);
+    }
+  }
+}
+
 /*
 
 int main()
