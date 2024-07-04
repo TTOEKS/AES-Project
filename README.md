@@ -40,21 +40,40 @@ Don't confuse between int type and uint8_t type :(
 ## Function Test
 ### AES Cryptogarphy function test
 #### AES encryption/decription 
-![AES Cipher test](./rsrc/aes_cipher_test.png)
+![AES Cipher test](./rsrc/aes_cryptography_test.png)
   - Original Message: Hello World!!
 
 ### AES Cryptography communication test
 #### Plain text communication
-![AES plain communcation](./rsrc/plain_socket_communication.png)
+![AES plain communcation](./rsrc/aes_plain_communication.png)
   - Communcation flow
     1. Client send: Hello World
     2. Server send: Hello World too.
   - You can see payload data
 
 #### Encyprted test communcation
-![AES cipher communcation](./rsrc/cipher_socket_communication.png)
+![AES cipher communcation](./rsrc/aes_encrypted_communication.png)
   - Communcation flow
     1. Client send: Hello World
     2. Server send: Hello World too.
   - You can't see payload data (encrypted)
   - but, endpoint host can see payload data
+
+## Build
+<pre>
+<code># make 
+
+
+### AES Cryptograph function test
+./test/aes_test
+
+### AES encryptied communcation test
+# Plain text communcation
+./bin/server_plain
+./bin/client_plain
+
+# Encyprted text communcation
+./bin/server
+./bin/client
+</code>
+</pre>
